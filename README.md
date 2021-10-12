@@ -15,7 +15,7 @@ For additional information about the Device Authorization Grantplease visit Okta
 1. Clone the repo.
 
 ```bash
-git clone https://github.com/whitesand230/Okta.git
+git clone https://github.com/whitesand230/okta-deviceauthorizationgrant-demo.git
 ```
 
 2. Install dependencies based on package.json.
