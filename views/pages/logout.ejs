@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<!--<header>
+  <%- include('../partials/header'); %>
+</header>-->
+
+<body class="text-center">
+
+  <main class="form-signin">
+    <form>
+      <img class="mb-4" src="/img/794067.jpg" alt="" width="72" height="57">
+      <h1 class="h3 mb-3 fw-normal">Device Grant Flow Example</h1>
+
+      <div class="form-floating">
+        <h2>Logged out from StreamBox</h2>
+        <p>You session has been terminated.  Thank you.</p>
+      </div>
+
+
+      <%- include('../partials/footer'); %>
+    </form>
+  </main>
+
+</body>
+
+<script>
+  setInterval(function(){
+    console.log("Refreshing");
+    //localStorage.setItem("resData", document.getElementById("jsonResData").innerText);
+    location.replace('/');
+  }, 5000);
+</script>
+</html>

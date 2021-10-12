@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<!--<header>
+  <%- include('../partials/header'); %>
+</header>-->
+
+<body class="text-center">
+
+  <main class="form-signin">
+    <form>
+      <img class="mb-4" src="/img/794067.jpg" alt="" width="72" height="57">
+      <h1 class="h3 mb-3 fw-normal">Device Grant Flow Example</h1>
+
+      <input type="hidden" value=<%=Code %> >
+
+      <div class="form-floating">
+        <h2>Welcome to StreamBox</h2>
+        <p><%- welcomeLine %></p>
+      </div>
+  
+      <div class="form-floating">
+        <h2>QR Code</h2>
+        <img src=<%= qrCode %> />
+      </div>
+
+      <div class="form-floating">
+        <h2 class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Response Data</h2>
+          <div class="collapse" id="collapseExample">
+            <code id="jsonResData"><%- jsonResData %></code>
+          </div>   
+      </div>
+
+      <%- include('../partials/footer'); %>
+    </form>
+  </main>
+
+</body>
+
+<script>
+  setInterval(function(){
+    console.log("Refreshing");
+    localStorage.setItem("resData", document.getElementById("jsonResData").innerText);
+    window.location.reload(true);
+  }, 10000);
+</script>
+</html>

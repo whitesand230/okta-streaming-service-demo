@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<!--<header>
+  <%- include('../partials/header'); %>
+</header>-->
+
+<body class="text-center">
+
+  <main class="form-signin">
+    <form>
+      <img class="mb-4" src="/img/794067.jpg" alt="" width="72" height="57">
+      <h1 class="h3 mb-3 fw-normal">Device Grant Flow Example</h1>
+
+      <!--<div class="form-floating">
+        <h2>Welcome to StreamBox</h2>
+      </div>-->
+
+      <div class="form-floating">
+        <video width=100% height=100% autoplay>
+          <source src="/vid/movie.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+        </video> 
+      </div>
+      
+
+      <div class="form-floating">
+        <h2 class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Display Tokens</h2>
+          <div class="collapse" id="collapseExample">
+            <div class="form-floating">
+              <h2>Access Token</h2>
+              <code><%= accessToken %></code> 
+            </div>
+      
+            <div class="form-floating">
+              <h2>ID Token</h2>
+              <code><%= idToken %></code>
+            </div>
+      
+          </div> 
+          
+          <h2 class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" onclick="document.location.href='/logout';">Logout</h2>
+      </div>
+      
+      <%- include('../partials/footer'); %>
+    </form>
+  </main>
+
+ 
+
+</body>
+</html>
