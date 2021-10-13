@@ -1,7 +1,7 @@
 {
-  "name": "devicegrantflow",
-  "version": "1.0.0",
-  "description": "Device Grant Flow Demo",
+  "name": "okta-streaming-service-demo",
+  "version": "1.0.1",
+  "description": "This project allows you simulate Okta's Device Authorization Grant Flow within your browser.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

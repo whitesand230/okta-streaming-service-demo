@@ -1,5 +1,5 @@
 # Device Authorization Grant Flow Demo (Web)
-This project allows you test Okta's Device Authorization Grant Flow within your browser.
+This project allows you simulate Okta's Device Authorization Grant Flow within your browser.
 
 For additional information about the Device Authorization Grantplease visit Okta Developer [page](https://developer.okta.com/docs/guides/device-authorization-grant/main).
 
