@@ -30,24 +30,26 @@
       <div class="form-floating">
           <input type="submit" class="btn btn-primary" name="refresh" value="Refresh Tokens" />
       </div>
+
+      <div class="form-floating">  
+        <h2 class="btn btn-link" type="button" onclick="document.location.href='/logout';">Sign out</h2>
+    </div>
       
 
       <div class="form-floating">
-        <h2 class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Display Tokens</h2>
+        <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Display Tokens</button>
           <div class="collapse" id="collapseExample">
             <div class="form-floating">
-              <h2>Access Token</h2>
+              <h3>Access Token</h3>
               <code><%= accessToken %></code> 
             </div>
       
             <div class="form-floating">
-              <h2>ID Token</h2>
+              <h3>ID Token</h3>
               <code><%= idToken %></code>
             </div>
       
-          </div> 
-          
-          <h2 class="btn btn-primary" type="button" onclick="document.location.href='/logout';">Logout</h2>
+          </div>
       </div>
       
       <%- include('../partials/footer'); %>
