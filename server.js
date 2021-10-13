@@ -116,7 +116,7 @@ app.get('/', (req, res) => {
 
 })
 
-//Refresh Code
+//REFRESH DEVICE CODE AND USER CODE
 app.post('/', (req, res) =>{
     //check for resData
     if(req.cookies.resdata){
@@ -202,14 +202,14 @@ app.get('/session', (req, res) => {
 
 })
 
-//ADDED: REFRESH ACESSS TOKEN
+//REFRESH ACESSS TOKEN
 app.post('/session', (req,res) =>{
     if(req.cookies.refreshToken){
         payload = {
             'client_id': process.env.CLIENT_ID,
             'grant_type':'refresh_token',
             'redirect_uri':'http://localhost:8080',
-            'scope': 'openid profile offline_access video:playback',
+            'scope': process.env.SCOPES || 'openid profile offline_access',
             'refresh_token': req.cookies.refreshToken
         };
 
