@@ -99,7 +99,7 @@ app.get('/', (req, res) => {
                         console.log("Response from Authorization Endpoint: ")
                         console.log(response.data);
                     }  
-                    res.cookie("resdata", response.data);
+                    res.cookie("resdata", response.data, {'sameSite': 'strict'});
                     res.render('pages/index', {
                         jsonResData: JSON.stringify(response.data),
                         welcomeLine: 'Please visit <a href="' + response.data.verification_uri + '" target="_blank">' + response.data.verification_uri + '</a> and enter code: ' + response.data.user_code + ' to activate your device.',
@@ -116,15 +116,76 @@ app.get('/', (req, res) => {
 
 })
 
+//Refresh Code
+app.post('/', (req, res) =>{
+    //check for resData
+    if(req.cookies.resdata){
+        //TODO
+        if(process.env.DEBUG === 'true'){
+            console.log("Refreshing Device Code");
+        }
+        
+        //CREATE PAYLOAD FOR AUTHZ ENDPOINT
+        payload = {
+            'client_id': process.env.CLIENT_ID,
+            'scope': process.env.SCOPES || 'openid profile offline_access'  //will use default OIDC scopes if none are provided.
+        }
+        
+        axios.post('https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/device/authorize', qs.stringify(payload), { headers })
+            .then(response => {
+                QRCode.toDataURL(response.data.verification_uri_complete, function (err, url) {
+                    if (err) return console.log("error occured")
+                    if(process.env.DEBUG === 'true'){
+                        console.log("***Okta Authorization Endpoint response***");
+                        console.log("Response from Authorization Endpoint: ")
+                        console.log(response.data);
+                    }  
+                    res.cookie("resdata", response.data, {'sameSite': 'strict'});
+                    res.render('pages/index', {
+                        jsonResData: JSON.stringify(response.data),
+                        welcomeLine: 'Please visit <a href="' + response.data.verification_uri + '" target="_blank">' + response.data.verification_uri + '</a> and enter code: ' + response.data.user_code + ' to activate your device.',
+                        qrCode: url,
+                        Code: response.data.device_code
+                    });
+                    res.end();
+                })
+            })
+            .catch(error => {
+                if(process.env.DEBUG === 'true'){
+                    console.log("Error when calling Token Endpoint.");
+                    console.log(error);
+                }
+                res.send(error.response.data);
+            })
+    }
+    else{
+        //TODO
+        QRCode.toDataURL(req.cookies.resdata.verification_uri_complete, function (err, url) {
+            if (err) return console.log("error occured")
+            if(process.env.DEBUG === 'true'){
+                console.log("***Okta Authorization Endpoint response***");
+                console.log("Response from Authorization Endpoint: ")
+                console.log(req.cookies.resdata);
+            }  
+            res.render('pages/index', {
+                jsonResData: JSON.stringify(req.cookies.resdata),
+                welcomeLine: 'Please visit <a href="' + req.cookies.resdata.verification_uri + '" target="_blank">' + req.cookies.resdata.verification_uri + '</a> and enter code: ' + req.cookies.resdata.user_code + ' to activate your device.',
+                qrCode: url,
+                Code: req.cookies.resdata.device_code
+            });
+        });
+    }
+})
+
 app.get('/session', (req, res) => {
 
     //read the cookie not localStorage
     if (store('accessToken')) {
 
         res.clearCookie('resdata');
-        res.cookie('accessToken', store('accessToken'));
-        res.cookie('idToken', store('idToken'))
-        res.cookie('refreshToken', store('refreshToken'));
+        res.cookie('accessToken', store('accessToken'), {'sameSite': 'strict'});
+        res.cookie('idToken', store('idToken'), {'sameSite': 'strict'})
+        res.cookie('refreshToken', store('refreshToken'), {'sameSite': 'strict'});
         res.render('pages/access', {
             accessToken: store('accessToken'),
             idToken: store('idToken')
@@ -168,9 +229,9 @@ app.post('/session', (req,res) =>{
             if(response.data.refresh_token){
                 store('refreshToken', response.data.refresh_token)
             }
-            res.cookie('accessToken', store('accessToken'));
-            res.cookie('idToken', store('idToken'))
-            res.cookie('refreshToken', store('refreshToken'));
+            res.cookie('accessToken', store('accessToken'), {'sameSite': 'strict'});
+            res.cookie('idToken', store('idToken'), {'sameSite': 'strict'})
+            res.cookie('refreshToken', store('refreshToken'), {'sameSite': 'strict'});
 
             res.render('pages/access', {
                 accessToken: store('accessToken'),

@@ -12,7 +12,7 @@
 <body class="text-center">
 
   <main class="form-signin">
-    <form>
+    <form action="/" method="post">
       <img class="mb-4" src="/img/794067.jpg" alt="" width="72" height="57">
       <h1 class="h3 mb-3 fw-normal">Device Grant Flow Example</h1>
 
@@ -29,7 +29,11 @@
       </div>
 
       <div class="form-floating">
-        <h2 class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Response Data</h2>
+        <input class="btn btn-primary" type="submit" name="refreshCode" value="Refresh Code" />
+      </div>
+
+      <div class="form-floating">
+        <h2 class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Show Response Data</h2>
           <div class="collapse" id="collapseExample">
             <code id="jsonResData"><%- jsonResData %></code>
           </div>   
