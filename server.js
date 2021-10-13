@@ -16,6 +16,9 @@ const headers = {
 const AUTHZID = process.env.AUTHZ_ID || 'default';
 const SCOPE = process.env.SCOPES || 'openid profile offline_access';
 
+const AUTHZ_ENDPOINT = 'https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/device/authorize';
+const TOKEN_ENDPOINT = 'https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/token'
+
 //set the view engine to ejs
 app.set('view engine', 'ejs');
 app.use(cookieParser());
@@ -44,7 +47,7 @@ app.get('/', (req, res) => {
         }
 
         //call Okta token endpoint.
-        axios.post('https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/token', qs.stringify(payload), { headers })
+        axios.post(TOKEN_ENDPOINT, qs.stringify(payload), { headers })
         .then(response => {
             //We got the access and id tokens
             store('accessToken', response.data.access_token);
@@ -91,7 +94,8 @@ app.get('/', (req, res) => {
             'scope': SCOPE  //will use default OIDC scopes if none are provided.
         }
         
-        axios.post('https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/device/authorize', qs.stringify(payload), { headers })
+        //CALLING AUTHZ ENDPOINT
+        axios.post(AUTHZ_ENDPOINT, qs.stringify(payload), { headers })
             .then(response => {
                 QRCode.toDataURL(response.data.verification_uri_complete, function (err, url) {
                     if (err) return console.log("error occured")
@@ -132,7 +136,8 @@ app.post('/', (req, res) =>{
             'scope': SCOPE  //will use default OIDC scopes if none are provided.
         }
         
-        axios.post('https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/device/authorize', qs.stringify(payload), { headers })
+        //CALLING AUTHZ ENDPOINT
+        axios.post(AUTHZ_ENDPOINT, qs.stringify(payload), { headers })
             .then(response => {
                 QRCode.toDataURL(response.data.verification_uri_complete, function (err, url) {
                     if (err) return console.log("error occured")
@@ -180,7 +185,6 @@ app.post('/', (req, res) =>{
 
 app.get('/session', (req, res) => {
 
-    //read the cookie not localStorage
     if (store('accessToken')) {
 
         res.clearCookie('resdata');
@@ -218,7 +222,8 @@ app.post('/session', (req,res) =>{
             console.log("Getting Refreshing Token");
         }
 
-        axios.post('https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/token',qs.stringify(payload), {headers})
+        //CALLING TOKEN ENDPOINT
+        axios.post(TOKEN_ENDPOINT,qs.stringify(payload), {headers})
         .then(response => {
             if(process.env.DEBUG === 'true'){
                 console.log("Getting Refreshing Token");

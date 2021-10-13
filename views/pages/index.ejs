@@ -48,8 +48,8 @@
 <script>
   setInterval(function(){
     console.log("Refreshing");
-    localStorage.setItem("resData", document.getElementById("jsonResData").innerText);
-    window.location.reload(true);
+    //localStorage.setItem("resData", document.getElementById("jsonResData").innerText);
+    location.replace(window.location);
   }, 10000);
 </script>
 </html>
