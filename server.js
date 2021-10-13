@@ -14,6 +14,7 @@ const headers = {
 }
 
 const AUTHZID = process.env.AUTHZ_ID || 'default';
+const SCOPE = process.env.SCOPES || 'openid profile offline_access';
 
 //set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -87,7 +88,7 @@ app.get('/', (req, res) => {
         //CREATE PAYLOAD FOR AUTHZ ENDPOINT
         payload = {
             'client_id': process.env.CLIENT_ID,
-            'scope': process.env.SCOPES || 'openid profile offline_access'  //will use default OIDC scopes if none are provided.
+            'scope': SCOPE  //will use default OIDC scopes if none are provided.
         }
         
         axios.post('https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/device/authorize', qs.stringify(payload), { headers })
@@ -128,7 +129,7 @@ app.post('/', (req, res) =>{
         //CREATE PAYLOAD FOR AUTHZ ENDPOINT
         payload = {
             'client_id': process.env.CLIENT_ID,
-            'scope': process.env.SCOPES || 'openid profile offline_access'  //will use default OIDC scopes if none are provided.
+            'scope': SCOPE  //will use default OIDC scopes if none are provided.
         }
         
         axios.post('https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/device/authorize', qs.stringify(payload), { headers })
@@ -209,7 +210,7 @@ app.post('/session', (req,res) =>{
             'client_id': process.env.CLIENT_ID,
             'grant_type':'refresh_token',
             'redirect_uri':'http://localhost:8080',
-            'scope': process.env.SCOPES || 'openid profile offline_access',
+            'scope': SCOPE,
             'refresh_token': req.cookies.refreshToken
         };
 
