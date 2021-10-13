@@ -12,7 +12,7 @@
 <body class="text-center">
 
   <main class="form-signin">
-    <form>
+    <form action="/session" method="post">
       <img class="mb-4" src="/img/794067.jpg" alt="" width="72" height="57">
       <h1 class="h3 mb-3 fw-normal">Device Grant Flow Example</h1>
 
@@ -25,6 +25,10 @@
           <source src="/vid/movie.mp4" type="video/mp4">
         Your browser does not support the video tag.
         </video> 
+      </div>
+
+      <div class="form-floating">
+          <input type="submit" class="btn btn-primary" name="refresh" value="Refresh Tokens" />
       </div>
       
 
@@ -43,7 +47,7 @@
       
           </div> 
           
-          <h2 class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" onclick="document.location.href='/logout';">Logout</h2>
+          <h2 class="btn btn-primary" type="button" onclick="document.location.href='/logout';">Logout</h2>
       </div>
       
       <%- include('../partials/footer'); %>

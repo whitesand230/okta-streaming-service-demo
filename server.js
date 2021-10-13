@@ -48,12 +48,13 @@ app.get('/', (req, res) => {
             //We got the access and id tokens
             store('accessToken', response.data.access_token);
             store('idToken', response.data.id_token);
-            //ADDED line to capture refresh token
             if(response.data.refresh_token){
+                //console.log(response.data.refresh_token);
                 store('refreshToken', response.data.refresh_token)
             }
             //Display Response if DEBUG
             if(process.env.DEBUG === 'true'){
+                console.log("Response from Token Endpoint: ")
                 console.log(response.data);
             }   
         })
@@ -66,7 +67,8 @@ app.get('/', (req, res) => {
         QRCode.toDataURL(req.cookies.resdata.verification_uri_complete, function (err, url) {
             if (err) return console.log("error occured")
             if(process.env.DEBUG === 'true'){
-                console.log("***Okta Authorize Endpoint response***");
+                console.log("***Okta Authorization Endpoint response***");
+                console.log("Response from Authorization Endpoint: ")
                 console.log(req.cookies.resdata);
             }  
             res.render('pages/index', {
@@ -93,7 +95,8 @@ app.get('/', (req, res) => {
                 QRCode.toDataURL(response.data.verification_uri_complete, function (err, url) {
                     if (err) return console.log("error occured")
                     if(process.env.DEBUG === 'true'){
-                        console.log("***Okta Authorize Endpoint response***");
+                        console.log("***Okta Authorization Endpoint response***");
+                        console.log("Response from Authorization Endpoint: ")
                         console.log(response.data);
                     }  
                     res.cookie("resdata", response.data);
@@ -121,8 +124,7 @@ app.get('/session', (req, res) => {
         res.clearCookie('resdata');
         res.cookie('accessToken', store('accessToken'));
         res.cookie('idToken', store('idToken'))
-        //ADDED
-        res.cookie('refreskToken', store('refreskToken'));
+        res.cookie('refreshToken', store('refreshToken'));
         res.render('pages/access', {
             accessToken: store('accessToken'),
             idToken: store('idToken')
@@ -130,8 +132,66 @@ app.get('/session', (req, res) => {
     }
 
     else {
-        console.log('Missing tokens');
+        if(process.env.DEBUG === 'true'){
+            console.log('Missing access tokens. Redirecting to login page.');
+        }
+        
         res.status(302).redirect('/');
+    }
+
+})
+
+//ADDED: REFRESH ACESSS TOKEN
+app.post('/session', (req,res) =>{
+    if(req.cookies.refreshToken){
+        payload = {
+            'client_id': process.env.CLIENT_ID,
+            'grant_type':'refresh_token',
+            'redirect_uri':'http://localhost:8080',
+            'scope': 'openid profile offline_access video:playback',
+            'refresh_token': req.cookies.refreshToken
+        };
+
+        if(process.env.DEBUG === 'true'){
+            console.log("Getting Refreshing Token");
+        }
+
+        axios.post('https://' + process.env.OKTA_HOST + '/oauth2/' + AUTHZID + '/v1/token',qs.stringify(payload), {headers})
+        .then(response => {
+            if(process.env.DEBUG === 'true'){
+                console.log("Getting Refreshing Token");
+                console.log("Response from Token Endpoint:");
+                console.log(response.data);
+            }
+            store('accessToken', response.data.access_token);
+            store('idToken', response.data.id_token);
+            if(response.data.refresh_token){
+                store('refreshToken', response.data.refresh_token)
+            }
+            res.cookie('accessToken', store('accessToken'));
+            res.cookie('idToken', store('idToken'))
+            res.cookie('refreshToken', store('refreshToken'));
+
+            res.render('pages/access', {
+                accessToken: store('accessToken'),
+                idToken: store('idToken')
+            });
+            
+        })
+        .catch(error => {
+            if(process.env.DEBUG === 'true'){
+                console.log("Error when calling Token Endpoint.");
+                console.log(error);
+            }
+            
+        })
+    }
+    else{
+        //No token just refresh the page.
+        res.render('pages/access', {
+            accessToken: store('accessToken'),
+            idToken: store('idToken')
+        });
     }
 
 })
@@ -140,6 +200,7 @@ app.get('/logout', (req, res) => {
     store.clearAll();
     res.clearCookie('accessToken');
     res.clearCookie('idToken');
+    res.clearCookie('refreshToken');
     res.render('pages/logout');
 })
 
