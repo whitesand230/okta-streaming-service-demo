@@ -68,20 +68,7 @@ app.get('/', (req, res) => {
             }       
         })
 
-        QRCode.toDataURL(req.cookies.resdata.verification_uri_complete, function (err, url) {
-            if (err) return console.log("error occured")
-            if(process.env.DEBUG === 'true'){
-                console.log("***Okta Authorization Endpoint response***");
-                console.log("Response from Authorization Endpoint: ")
-                console.log(req.cookies.resdata);
-            }  
-            res.render('pages/index', {
-                jsonResData: JSON.stringify(req.cookies.resdata),
-                welcomeLine: 'Please visit <a href="' + req.cookies.resdata.verification_uri + '" target="_blank">' + req.cookies.resdata.verification_uri + '</a> and enter code: <b>' + req.cookies.resdata.user_code + '</b> to activate your device.',
-                qrCode: url,
-                Code: req.cookies.resdata.device_code
-            });
-        });
+        displayPage(req.cookies.resdata, res, false);
     }
     else {
         if(process.env.DEBUG === 'true'){
@@ -97,22 +84,7 @@ app.get('/', (req, res) => {
         //CALLING AUTHZ ENDPOINT
         axios.post(AUTHZ_ENDPOINT, qs.stringify(payload), { headers })
             .then(response => {
-                QRCode.toDataURL(response.data.verification_uri_complete, function (err, url) {
-                    if (err) return console.log("error occured")
-                    if(process.env.DEBUG === 'true'){
-                        console.log("***Okta Authorization Endpoint response***");
-                        console.log("Response from Authorization Endpoint: ")
-                        console.log(response.data);
-                    }  
-                    res.cookie("resdata", response.data, {'sameSite': 'strict'});
-                    res.render('pages/index', {
-                        jsonResData: JSON.stringify(response.data),
-                        welcomeLine: 'Please visit <a href="' + response.data.verification_uri + '" target="_blank">' + response.data.verification_uri + '</a> and enter code: <b>' + response.data.user_code + '</b> to activate your device.',
-                        qrCode: url,
-                        Code: response.data.device_code
-                    });
-                    res.end();
-                })
+                displayPage(response.data, res, true);
             })
             .catch(error => {
                 res.send(error.response.data);
@@ -139,22 +111,7 @@ app.post('/', (req, res) =>{
         //CALLING AUTHZ ENDPOINT
         axios.post(AUTHZ_ENDPOINT, qs.stringify(payload), { headers })
             .then(response => {
-                QRCode.toDataURL(response.data.verification_uri_complete, function (err, url) {
-                    if (err) return console.log("error occured")
-                    if(process.env.DEBUG === 'true'){
-                        console.log("***Okta Authorization Endpoint response***");
-                        console.log("Response from Authorization Endpoint: ")
-                        console.log(response.data);
-                    }  
-                    res.cookie("resdata", response.data, {'sameSite': 'strict'});
-                    res.render('pages/index', {
-                        jsonResData: JSON.stringify(response.data),
-                        welcomeLine: 'Please visit <a href="' + response.data.verification_uri + '" target="_blank">' + response.data.verification_uri + '</a> and enter code: ' + response.data.user_code + ' to activate your device.',
-                        qrCode: url,
-                        Code: response.data.device_code
-                    });
-                    res.end();
-                })
+                displayPage(response.data, res, true);
             })
             .catch(error => {
                 if(process.env.DEBUG === 'true'){
@@ -166,20 +123,7 @@ app.post('/', (req, res) =>{
     }
     else{
         //TODO
-        QRCode.toDataURL(req.cookies.resdata.verification_uri_complete, function (err, url) {
-            if (err) return console.log("error occured")
-            if(process.env.DEBUG === 'true'){
-                console.log("***Okta Authorization Endpoint response***");
-                console.log("Response from Authorization Endpoint: ")
-                console.log(req.cookies.resdata);
-            }  
-            res.render('pages/index', {
-                jsonResData: JSON.stringify(req.cookies.resdata),
-                welcomeLine: 'Please visit <a href="' + req.cookies.resdata.verification_uri + '" target="_blank">' + req.cookies.resdata.verification_uri + '</a> and enter code: ' + req.cookies.resdata.user_code + ' to activate your device.',
-                qrCode: url,
-                Code: req.cookies.resdata.device_code
-            });
-        });
+        displayPage(req.cookies.resdata, res, false);
     }
 })
 
@@ -273,3 +217,25 @@ app.get('/logout', (req, res) => {
 
 app.listen(8080);
 console.log('Server is listening on port 8080');
+
+function displayPage(oktaResponseData, res, addCookie){
+    QRCode.toDataURL(oktaResponseData.verification_uri_complete, function (err, url) {
+        if (err) return console.log("error occured")
+        if(process.env.DEBUG === 'true'){
+            console.log("***Okta Authorization Endpoint response***");
+            console.log("Response from Authorization Endpoint: ")
+            console.log(oktaResponseData);
+        } 
+        if(addCookie) {
+            res.cookie("resdata", oktaResponseData, {'sameSite': 'strict'});
+        }
+        var modifyString = oktaResponseData.user_code.substring(0, 4) + "-" + oktaResponseData.user_code.substring(4, oktaResponseData.user_code.length);
+        res.render('pages/index', {
+            jsonResData: JSON.stringify(oktaResponseData),
+            welcomeLine: 'Please visit <a href="' + oktaResponseData.verification_uri + '" target="_blank">' + oktaResponseData.verification_uri + '</a> and enter code: <br/> <b>' + modifyString + '</b> to activate your device.',
+            qrCode: url,
+            Code: oktaResponseData.device_code
+        });
+        res.end();
+    })
+}
