@@ -77,7 +77,7 @@ app.get('/', (req, res) => {
             }  
             res.render('pages/index', {
                 jsonResData: JSON.stringify(req.cookies.resdata),
-                welcomeLine: 'Please visit <a href="' + req.cookies.resdata.verification_uri + '" target="_blank">' + req.cookies.resdata.verification_uri + '</a> and enter code: ' + req.cookies.resdata.user_code + ' to activate your device.',
+                welcomeLine: 'Please visit <a href="' + req.cookies.resdata.verification_uri + '" target="_blank">' + req.cookies.resdata.verification_uri + '</a> and enter code: <b>' + req.cookies.resdata.user_code + '</b> to activate your device.',
                 qrCode: url,
                 Code: req.cookies.resdata.device_code
             });
@@ -107,7 +107,7 @@ app.get('/', (req, res) => {
                     res.cookie("resdata", response.data, {'sameSite': 'strict'});
                     res.render('pages/index', {
                         jsonResData: JSON.stringify(response.data),
-                        welcomeLine: 'Please visit <a href="' + response.data.verification_uri + '" target="_blank">' + response.data.verification_uri + '</a> and enter code: ' + response.data.user_code + ' to activate your device.',
+                        welcomeLine: 'Please visit <a href="' + response.data.verification_uri + '" target="_blank">' + response.data.verification_uri + '</a> and enter code: <b>' + response.data.user_code + '</b> to activate your device.',
                         qrCode: url,
                         Code: response.data.device_code
                     });

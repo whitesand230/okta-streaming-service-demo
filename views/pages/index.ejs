@@ -29,7 +29,7 @@
       </div>
 
       <div class="form-floating">
-        <input class="btn btn-primary" type="submit" name="refreshCode" value="Refresh Code" />
+        <input class="btn btn-primary" type="submit" onclick="setResetFlag()" name="refreshCode" value="Refresh Code" />
       </div>
 
       <div class="form-floating">
@@ -40,16 +40,50 @@
       </div>
 
       <%- include('../partials/footer'); %>
+      <br/>
+      <div id="myBar"></div>
     </form>
   </main>
 
 </body>
 
 <script>
+  var i = 0;
+  function move() {
+    if (i == 0) {
+      i = 1;
+      var elem = document.getElementById("myBar");
+      var width = 1;
+      var id = setInterval(frame, 90);
+      function frame() {
+        if (width >= 100) {
+          clearInterval(id);
+          i = 0;
+        } else {
+          width++;
+          elem.style.width = width + "%";
+        }
+      }
+    }
+  }
   setInterval(function(){
     console.log("Refreshing");
     //localStorage.setItem("resData", document.getElementById("jsonResData").innerText);
-    location.replace(window.location);
+
+    if(window.localStorage.getItem('codeReset')){
+      window.localStorage.clear('codeReset');
+      location.replace(window.location);
+    }
+    else{
+      location.reload(true);
+    }
+    //location.replace(window.location);
   }, 10000);
+
+  function setResetFlag(){
+    window.localStorage.setItem('codeReset', true);
+  }
+
+  window.onload(move());
 </script>
 </html>
