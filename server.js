@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
         if(process.env.DEBUG === 'true'){
             console.log("Calling Token EndPoint");
         }
-        
+
         //CREATE PAYLOAD FOR TOKEN ENDPOINT
         payload = {
             'client_id': process.env.CLIENT_ID,
@@ -60,12 +60,12 @@ app.get('/', (req, res) => {
             if(process.env.DEBUG === 'true'){
                 console.log("Response from Token Endpoint: ")
                 console.log(response.data);
-            }   
+            }
         })
         .catch(error => {
             if(process.env.DEBUG === 'true'){
                 console.log(error);
-            }       
+            }
         })
 
         displayPage(req.cookies.resdata, res, false);
@@ -74,20 +74,23 @@ app.get('/', (req, res) => {
         if(process.env.DEBUG === 'true'){
             console.log("Calling Authorize EndPoint");
         }
-        
+
         //CREATE PAYLOAD FOR AUTHZ ENDPOINT
         payload = {
             'client_id': process.env.CLIENT_ID,
             'scope': SCOPE  //will use default OIDC scopes if none are provided.
         }
-        
+
         //CALLING AUTHZ ENDPOINT
         axios.post(AUTHZ_ENDPOINT, qs.stringify(payload), { headers })
             .then(response => {
                 displayPage(response.data, res, true);
             })
             .catch(error => {
-                res.send(error.response.data);
+                console.log(error, error.response && error.response.data);
+                if (error) {
+                    res.send(error.response.data);
+                }
             })
     }
 
@@ -101,13 +104,13 @@ app.post('/', (req, res) =>{
         if(process.env.DEBUG === 'true'){
             console.log("Refreshing Device Code");
         }
-        
+
         //CREATE PAYLOAD FOR AUTHZ ENDPOINT
         payload = {
             'client_id': process.env.CLIENT_ID,
             'scope': SCOPE  //will use default OIDC scopes if none are provided.
         }
-        
+
         //CALLING AUTHZ ENDPOINT
         axios.post(AUTHZ_ENDPOINT, qs.stringify(payload), { headers })
             .then(response => {
@@ -145,13 +148,13 @@ app.get('/session', (req, res) => {
         if(process.env.DEBUG === 'true'){
             console.log('Missing access tokens. Redirecting to login page.');
         }
-        
+
         res.status(302).redirect('/');
     }
 
 })
 
-//REFRESH ACESSS TOKEN
+//REFRESH ACCESS TOKEN
 app.post('/session', (req,res) =>{
     if(req.cookies.refreshToken){
         payload = {
@@ -182,20 +185,20 @@ app.post('/session', (req,res) =>{
             }
             res.cookie('accessToken', store('accessToken'), {'sameSite': 'strict'});
             res.cookie('idToken', store('idToken'), {'sameSite': 'strict'});
-            
+
 
             res.render('pages/access', {
                 accessToken: store('accessToken'),
                 idToken: store('idToken')
             });
-            
+
         })
         .catch(error => {
             if(process.env.DEBUG === 'true'){
                 console.log("Error when calling Token Endpoint.");
                 console.log(error);
             }
-            
+
         })
     }
     else{
@@ -221,12 +224,12 @@ console.log('Server is listening on port 8080');
 
 function displayPage(oktaResponseData, res, addCookie){
     QRCode.toDataURL(oktaResponseData.verification_uri_complete, function (err, url) {
-        if (err) return console.log("error occured")
+        if (err) return console.log("error occurred")
         if(process.env.DEBUG === 'true'){
             console.log("***Okta Authorization Endpoint response***");
             console.log("Response from Authorization Endpoint: ")
             console.log(oktaResponseData);
-        } 
+        }
         if(addCookie) {
             res.cookie("resdata", oktaResponseData, {'sameSite': 'strict'});
         }

@@ -1,7 +1,8 @@
 # Device Authorization Grant Flow Demo (Web)
+
 This project allows you simulate Okta's Device Authorization Grant Flow within your browser.
 
-For additional information about the Device Authorization Grantplease visit Okta Developer [page](https://developer.okta.com/docs/guides/device-authorization-grant/main).
+For additional information about the Device Authorization Grant please visit Okta Developer [page](https://developer.okta.com/docs/guides/device-authorization-grant/main).
 
 ## Disclaimer :warning:
 
@@ -40,17 +41,25 @@ cp .env.example .env
 
 4. Update variables in the .env file.
 ```bash
-#Required Configuration
-OKTA_HOST=<OKTA_HOST, e.g. okta.okta.com>
+# Okta Configuration
+# ie.
+# OKTA_HOST=YOUR_OKTA_SUBDOMAIN.okta.com or YOUR_OKTA_SUBDOMAIN.oktapreview.com
+# CLIENT_ID=0oa...0h8
+# AUTHZ_ID=default or Authorization Server GUID
+#
+OKTA_HOST=<OKTA URL>
 CLIENT_ID=<APPLICATION CLIENT ID>
-AUTHZ_ID=<Okta Authorization ID, e.g default>
+AUTHZ_ID=<OKTA AUTHORIZATION ID>
 
-#--Optional Configuration -- Uncomment if needed
-#Default Scopes are set to: openid offline_access profile
-#SCOPES=<REQUIRED SCOPES>
+# Optional Configuration
+# Default Scopes are set to: "openid offline_access profile"
+# ie
+# SCOPES=custom-scope-1 custom-scope-2
+#
+# SCOPES=<REQUIRED SCOPES>
 
-#Enabled verberos logging. Defaults to false
-#DEBUG=false
+# Enable for verbose logging. Defaults to false
+# DEBUG=false
 ```
 
 5. Save the .env file.
@@ -60,7 +69,7 @@ AUTHZ_ID=<Okta Authorization ID, e.g default>
 To start the express server, enter the following command
 
 ```bash
-node server.js
+npm run start
 ```
 
 6. Open http://localhost:8080 on your browser of choice. You will see the following screen.
@@ -68,9 +77,11 @@ node server.js
 ![Screenshot](screenshot.png)
 
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
 ## License
+
 [MIT](https://choosealicense.com/licenses/mit/)
