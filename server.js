@@ -177,11 +177,12 @@ app.post('/session', (req,res) =>{
             store('accessToken', response.data.access_token);
             store('idToken', response.data.id_token);
             if(response.data.refresh_token){
-                store('refreshToken', response.data.refresh_token)
+                store('refreshToken', response.data.refresh_token);
+                res.cookie('refreshToken', store('refreshToken'), {'sameSite': 'strict'});
             }
             res.cookie('accessToken', store('accessToken'), {'sameSite': 'strict'});
-            res.cookie('idToken', store('idToken'), {'sameSite': 'strict'})
-            res.cookie('refreshToken', store('refreshToken'), {'sameSite': 'strict'});
+            res.cookie('idToken', store('idToken'), {'sameSite': 'strict'});
+            
 
             res.render('pages/access', {
                 accessToken: store('accessToken'),
