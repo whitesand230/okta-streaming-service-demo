@@ -3,6 +3,10 @@ This project allows you simulate Okta's Device Authorization Grant Flow within y
 
 For additional information about the Device Authorization Grantplease visit Okta Developer [page](https://developer.okta.com/docs/guides/device-authorization-grant/main).
 
+## Disclaimer :warning:
+
+This project serves as a Sample Application, that you can tweak or completely re-purpose. It is community-supported and is maintained by members of the Okta team for developers and other IT professionals. This is not an official Okta product and does not qualify for any Okta support. Okta makes no warranties regarding this project. Anyone who chooses to use this project must ensure that their implementation meets any applicable legal obligations including any Okta terms and conditions.
+
 ## Prerequisites
 
 * Okta Tenant - If you do not already an Okta tenant, you can register for a free [Okta Developer Editions](https://developer.okta.com/signup/)
@@ -42,9 +46,9 @@ AUTHZ_ID=<OKTA AUTHZ ID>
 
 #(Optional)
 #Default Scopes are openid offline_access profile
-SCOPES=<REQUIRED SCOPES>
+#SCOPES=<REQUIRED SCOPES>
 #Defaults to false
-DEBUG=<true||false>
+#DEBUG=<true||false>
 ```
 
 5. Save the .env file.
