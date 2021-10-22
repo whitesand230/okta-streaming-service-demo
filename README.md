@@ -40,15 +40,17 @@ cp .env.example .env
 
 4. Update variables in the .env file.
 ```bash
-OKTA_HOST=<OKTA URL>
+#Required Configuration
+OKTA_HOST=<OKTA_HOST, e.g. okta.okta.com>
 CLIENT_ID=<APPLICATION CLIENT ID>
-AUTHZ_ID=<OKTA AUTHZ ID>
+AUTHZ_ID=<Okta Authorization ID, e.g default>
 
-#(Optional)
-#Default Scopes are openid offline_access profile
+#--Optional Configuration -- Uncomment if needed
+#Default Scopes are set to: openid offline_access profile
 #SCOPES=<REQUIRED SCOPES>
-#Defaults to false
-#DEBUG=<true||false>
+
+#Enabled verberos logging. Defaults to false
+#DEBUG=false
 ```
 
 5. Save the .env file.
