@@ -10,7 +10,7 @@ This project serves as a Sample Application, that you can tweak or completely re
 
 ## Prerequisites
 
-* Okta Tenant - If you do not already an Okta tenant, you can register for a free [Okta Developer Editions](https://developer.okta.com/signup/)
+* Okta Tenant - If you do not already have an Okta tenant, you can register for a free [Okta Developer Editions](https://developer.okta.com/signup/)
 * An OIDC applications to use Device Authorization Grant. [How-to](https://developer.okta.com/docs/guides/device-authorization-grant/main/#configure-an-application-to-use-the-device-authorization-grant)
 * Node v14.0.0+
 * npm v6.14.15+
